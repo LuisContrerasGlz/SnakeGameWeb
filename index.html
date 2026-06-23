@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retro Neon Snake</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Google Fonts para estilo digital retro -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="game-wrapper">
+        <header class="game-header">
+            <h1>NEON SNAKE</h1>
+            <div class="score-board">
+                <div class="score-card">
+                    <span class="score-label">PUNTAJE</span>
+                    <span id="current-score" class="score-value">000</span>
+                </div>
+                <div class="score-card">
+                    <span class="score-label">RECORD</span>
+                    <span id="high-score" class="score-value">000</span>
+                </div>
+            </div>
+        </header>
+
+        <main class="game-container">
+            <!-- Lienzo del juego -->
+            <canvas id="game-canvas" width="400" height="400"></canvas>
+
+            <!-- Superposición de estados del juego (Inicio, Pausa, Fin) -->
+            <div id="game-overlay" class="overlay">
+                <div class="overlay-content">
+                    <h2 id="overlay-title">NEON SNAKE</h2>
+                    <p id="overlay-message">PRESIONA LA BARRA ESPACIADORA PARA EMPEZAR</p>
+                    <div id="final-stats" class="final-stats hidden">
+                        <p>PUNTAJE FINAL: <span id="final-score">0</span></p>
+                        <p id="new-record-msg" class="new-record-msg hidden">¡NUEVO RÉCORD!</p>
+                    </div>
+                    <button id="action-btn" class="action-btn">JUGAR</button>
+                </div>
+            </div>
+        </main>
+
+        <footer class="game-footer">
+            <div class="control-hints">
+                <span class="hint-item"><kbd>▲</kbd><kbd>▼</kbd><kbd>◄</kbd><kbd>►</kbd> o <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> Moverse</span>
+                <span class="hint-item"><kbd>ESPACIO</kbd> Pausar / Reiniciar</span>
+            </div>
+            <div class="audio-control">
+                <button id="mute-btn" class="mute-btn" title="Activar/Silenciar sonido">
+                    <span id="mute-icon">🔊</span>
+                </button>
+            </div>
+        </footer>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>

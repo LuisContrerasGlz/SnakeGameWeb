@@ -1,0 +1,322 @@
+/* Variables y diseño base */
+:root {
+    --bg-dark: #070714;
+    --bg-card: #12122b;
+    --color-snake: #39ff14; /* Verde neón */
+    --color-food: #ff007f;  /* Rosa neón */
+    --color-border: #00f0ff;/* Cian neón */
+    
+    --glow-snake: 0 0 10px rgba(57, 255, 20, 0.6), 0 0 20px rgba(57, 255, 20, 0.3);
+    --glow-food: 0 0 10px rgba(255, 0, 127, 0.6), 0 0 20px rgba(255, 0, 127, 0.3);
+    --glow-border: 0 0 15px rgba(0, 240, 255, 0.5), inset 0 0 15px rgba(0, 240, 255, 0.3);
+    
+    --text-color: #f0f4f8;
+    --text-muted: #6f708a;
+    --font-arcade: 'Share Tech Mono', monospace;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-color);
+    font-family: var(--font-arcade);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* Efecto retro CRT de fondo (líneas de escaneo) */
+body::after {
+    content: " ";
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+    aspect-ratio: auto;
+    background-size: 100% 4px, 6px 100%;
+    z-index: 999;
+    pointer-events: none;
+}
+
+/* Contenedor principal del juego */
+.game-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 440px;
+    padding: 20px;
+}
+
+/* Encabezado */
+.game-header {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.game-header h1 {
+    font-size: 2.2rem;
+    color: var(--text-color);
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.3), 0 0 20px var(--color-border);
+    letter-spacing: 4px;
+    margin-bottom: 15px;
+}
+
+/* Marcadores */
+.score-board {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.score-card {
+    flex: 1;
+    background: var(--bg-card);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.score-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: var(--color-border);
+}
+
+.score-card:first-child::before {
+    background: var(--color-snake);
+}
+
+.score-card:last-child::before {
+    background: var(--color-food);
+}
+
+.score-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+    margin-bottom: 5px;
+}
+
+.score-value {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--text-color);
+}
+
+#current-score {
+    text-shadow: 0 0 5px rgba(57, 255, 20, 0.5);
+}
+
+#high-score {
+    text-shadow: 0 0 5px rgba(255, 0, 127, 0.5);
+}
+
+/* Tablero de juego */
+.game-container {
+    width: 100%;
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    box-shadow: var(--glow-border);
+    border: 2px solid var(--color-border);
+}
+
+#game-canvas {
+    display: block;
+    background: #04040e;
+    width: 100%;
+    max-width: 400px;
+    aspect-ratio: 1 / 1;
+}
+
+/* Menú superpuesto (Start, Pause, Game Over) */
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(7, 7, 20, 0.9);
+    backdrop-filter: blur(8px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.3s ease;
+    opacity: 1;
+    z-index: 10;
+}
+
+.overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.overlay-content {
+    text-align: center;
+    padding: 20px;
+    max-width: 90%;
+}
+
+.overlay h2 {
+    font-size: 2.2rem;
+    margin-bottom: 15px;
+    letter-spacing: 2px;
+    text-shadow: var(--glow-border);
+}
+
+.overlay-content p {
+    font-size: 1rem;
+    color: var(--text-muted);
+    margin-bottom: 25px;
+    line-height: 1.5;
+}
+
+/* Contenedor de estadísticas finales */
+.final-stats {
+    margin-bottom: 25px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px dashed rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 15px 25px;
+}
+
+.final-stats p {
+    font-size: 1.2rem;
+    margin: 5px 0;
+    color: var(--text-color);
+}
+
+#final-score {
+    color: var(--color-snake);
+    font-weight: bold;
+    text-shadow: var(--glow-snake);
+}
+
+.new-record-msg {
+    color: var(--color-food) !important;
+    font-weight: bold;
+    animation: pulse 1s infinite alternate;
+    text-shadow: var(--glow-food);
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Botón de acción principal */
+.action-btn {
+    background: transparent;
+    border: 2px solid var(--color-snake);
+    color: var(--color-snake);
+    padding: 12px 30px;
+    font-family: var(--font-arcade);
+    font-size: 1.1rem;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
+    text-shadow: var(--glow-snake);
+    box-shadow: 0 0 10px rgba(57, 255, 20, 0.2);
+    transition: all 0.2s ease;
+    letter-spacing: 2px;
+}
+
+.action-btn:hover {
+    background: var(--color-snake);
+    color: var(--bg-dark);
+    box-shadow: 0 0 20px rgba(57, 255, 20, 0.6);
+    text-shadow: none;
+}
+
+.action-btn:active {
+    transform: scale(0.95);
+}
+
+/* Pie de página e instrucciones */
+.game-footer {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.control-hints {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.hint-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+kbd {
+    background: #1e1e38;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 4px;
+    color: var(--text-color);
+    padding: 2px 6px;
+    font-family: inherit;
+    font-size: 0.75rem;
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.4);
+}
+
+/* Botón Mute */
+.mute-btn {
+    background: var(--bg-card);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.mute-btn:hover {
+    border-color: var(--color-border);
+    box-shadow: 0 0 8px rgba(0, 240, 255, 0.3);
+}
+
+/* Animaciones */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(1.05);
+        opacity: 1;
+    }
+}
