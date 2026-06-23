@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,6 +11,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
 </head>
+
 <body>
     <div class="game-wrapper">
         <header class="game-header">
@@ -46,10 +48,14 @@
 
         <footer class="game-footer">
             <div class="control-hints">
-                <span class="hint-item"><kbd>▲</kbd><kbd>▼</kbd><kbd>◄</kbd><kbd>►</kbd> o <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> Moverse</span>
+                <span class="hint-item"><kbd>▲</kbd><kbd>▼</kbd><kbd>◄</kbd><kbd>►</kbd> o
+                    <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> Moverse</span>
                 <span class="hint-item"><kbd>ESPACIO</kbd> Pausar / Reiniciar</span>
             </div>
-            <div class="audio-control">
+            <div class="footer-actions">
+                <button id="reset-score-btn" class="reset-score-btn" title="Reiniciar récord">
+                    <span>🗑️</span>
+                </button>
                 <button id="mute-btn" class="mute-btn" title="Activar/Silenciar sonido">
                     <span id="mute-icon">🔊</span>
                 </button>
@@ -59,4 +65,5 @@
 
     <script src="game.js"></script>
 </body>
+
 </html>

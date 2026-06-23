@@ -2,14 +2,17 @@
 :root {
     --bg-dark: #070714;
     --bg-card: #12122b;
-    --color-snake: #39ff14; /* Verde neón */
-    --color-food: #ff007f;  /* Rosa neón */
-    --color-border: #00f0ff;/* Cian neón */
-    
+    --color-snake: #39ff14;
+    /* Verde neón */
+    --color-food: #ff007f;
+    /* Rosa neón */
+    --color-border: #00f0ff;
+    /* Cian neón */
+
     --glow-snake: 0 0 10px rgba(57, 255, 20, 0.6), 0 0 20px rgba(57, 255, 20, 0.3);
     --glow-food: 0 0 10px rgba(255, 0, 127, 0.6), 0 0 20px rgba(255, 0, 127, 0.3);
     --glow-border: 0 0 15px rgba(0, 240, 255, 0.5), inset 0 0 15px rgba(0, 240, 255, 0.3);
-    
+
     --text-color: #f0f4f8;
     --text-muted: #6f708a;
     --font-arcade: 'Share Tech Mono', monospace;
@@ -288,8 +291,15 @@ kbd {
     box-shadow: 0 2px 0 rgba(0, 0, 0, 0.4);
 }
 
-/* Botón Mute */
-.mute-btn {
+/* Contenedor de acciones del pie */
+.footer-actions {
+    display: flex;
+    gap: 10px;
+}
+
+/* Botones Mute y Reset */
+.mute-btn,
+.reset-score-btn {
     background: var(--bg-card);
     border: 1px solid rgba(255, 255, 255, 0.08);
     width: 40px;
@@ -309,12 +319,18 @@ kbd {
     box-shadow: 0 0 8px rgba(0, 240, 255, 0.3);
 }
 
+.reset-score-btn:hover {
+    border-color: var(--color-food);
+    box-shadow: 0 0 8px rgba(255, 0, 127, 0.4);
+}
+
 /* Animaciones */
 @keyframes pulse {
     0% {
         transform: scale(1);
         opacity: 0.8;
     }
+
     100% {
         transform: scale(1.05);
         opacity: 1;

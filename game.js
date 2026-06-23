@@ -16,6 +16,7 @@ const newRecordMsg = document.getElementById('new-record-msg');
 const actionBtn = document.getElementById('action-btn');
 const muteBtn = document.getElementById('mute-btn');
 const muteIcon = document.getElementById('mute-icon');
+const resetScoreBtn = document.getElementById('reset-score-btn');
 
 // Sonidos del juego usando la Web Audio API (Sintetizador en tiempo real)
 const audio = {
@@ -67,11 +68,11 @@ const audio = {
             osc.type = 'sine';
             gain.gain.setValueAtTime(0.1, now);
             gain.gain.exponentialRampToValueAtTime(0.01, now + 0.35);
-            
+
             osc.frequency.setValueAtTime(330, now); // E4
             osc.frequency.setValueAtTime(392, now + 0.08); // G4
             osc.frequency.setValueAtTime(523.25, now + 0.16); // C5
-            
+
             osc.start(now);
             osc.stop(now + 0.35);
         } else if (type === 'pause') {
@@ -107,7 +108,7 @@ function spawnParticles(x, y) {
     const canvasX = (x * GRID_SIZE) + (GRID_SIZE / 2);
     const canvasY = (y * GRID_SIZE) + (GRID_SIZE / 2);
     const particleCount = 10;
-    
+
     for (let i = 0; i < particleCount; i++) {
         const angle = Math.random() * Math.PI * 2;
         const speed = 1 + Math.random() * 3;
@@ -131,7 +132,7 @@ function updateParticles() {
         p.x += p.vx;
         p.y += p.vy;
         p.alpha -= p.decay;
-        
+
         if (p.alpha <= 0) {
             particles.splice(i, 1);
         }
@@ -158,17 +159,17 @@ function resetGame() {
 function spawnFood() {
     let validPosition = false;
     let newFood = {};
-    
+
     while (!validPosition) {
         newFood = {
             x: Math.floor(Math.random() * TILE_COUNT),
             y: Math.floor(Math.random() * TILE_COUNT)
         };
-        
+
         // Verificar que no aparezca dentro del cuerpo de la serpiente
         validPosition = !snake.some(segment => segment.x === newFood.x && segment.y === newFood.y);
     }
-    
+
     food = newFood;
 }
 
@@ -214,7 +215,7 @@ function handleKeyDown(e) {
 // Lógica al presionar el botón principal o barra espaciadora
 function handleMainAction() {
     audio.init();
-    
+
     if (gameState === 'START' || gameState === 'GAME_OVER') {
         resetGame();
         gameState = 'PLAYING';
@@ -242,7 +243,7 @@ function pauseGame() {
 function gameOver() {
     gameState = 'GAME_OVER';
     audio.play('death');
-    
+
     // Guardar nuevo récord si aplica
     let isNewRecord = false;
     if (score > highScore) {
@@ -251,18 +252,18 @@ function gameOver() {
         highScoreEl.textContent = String(highScore).padStart(3, '0');
         isNewRecord = true;
     }
-    
+
     // Actualizar menú final
     overlayTitle.textContent = 'FIN DEL JUEGO';
     overlayMsg.textContent = 'PRESIONA LA BARRA ESPACIADORA PARA REINICIAR';
     finalScoreEl.textContent = score;
-    
+
     if (isNewRecord) {
         newRecordMsg.classList.remove('hidden');
     } else {
         newRecordMsg.classList.add('hidden');
     }
-    
+
     finalStats.classList.remove('hidden');
     actionBtn.textContent = 'VOLVER A JUGAR';
     overlayEl.classList.remove('hidden');
@@ -272,37 +273,37 @@ function gameOver() {
 function updateGame() {
     // Aplicar la dirección en el tick actual
     direction = nextDirection;
-    
+
     // Calcular nueva cabeza
     const head = {
         x: snake[0].x + direction.x,
         y: snake[0].y + direction.y
     };
-    
+
     // Colisión contra bordes
     if (head.x < 0 || head.x >= TILE_COUNT || head.y < 0 || head.y >= TILE_COUNT) {
         gameOver();
         return;
     }
-    
+
     // Colisión contra sí misma
     if (snake.some(segment => segment.x === head.x && segment.y === head.y)) {
         gameOver();
         return;
     }
-    
+
     // Mover serpiente
     snake.unshift(head);
-    
+
     // Verificar si come comida
     if (head.x === food.x && head.y === food.y) {
         score += 10;
         scoreEl.textContent = String(score).padStart(3, '0');
-        
+
         spawnParticles(food.x, food.y);
         audio.play('eat');
         spawnFood();
-        
+
         // Incrementar velocidad gradualmente
         gameSpeed = Math.max(65, 130 - Math.floor(score / 30) * 5);
     } else {
@@ -316,7 +317,7 @@ function draw() {
     // Limpiar canvas
     ctx.fillStyle = '#04040e';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    
+
     // Dibujar cuadrícula de fondo con opacidad muy sutil (look retro)
     ctx.strokeStyle = 'rgba(0, 240, 255, 0.02)';
     ctx.lineWidth = 1;
@@ -326,7 +327,7 @@ function draw() {
         ctx.moveTo(i * GRID_SIZE, 0);
         ctx.lineTo(i * GRID_SIZE, canvas.height);
         ctx.stroke();
-        
+
         // Líneas horizontales
         ctx.beginPath();
         ctx.moveTo(0, i * GRID_SIZE);
@@ -336,39 +337,39 @@ function draw() {
 
     // Resetear sombra por defecto
     ctx.shadowBlur = 0;
-    
+
     // Dibujar comida
     const foodX = food.x * GRID_SIZE + GRID_SIZE / 2;
     const foodY = food.y * GRID_SIZE + GRID_SIZE / 2;
     const foodRadius = GRID_SIZE / 2 - 2;
-    
+
     ctx.fillStyle = '#ff007f';
     ctx.shadowBlur = 10;
     ctx.shadowColor = '#ff007f';
     ctx.beginPath();
     ctx.arc(foodX, foodY, foodRadius, 0, Math.PI * 2);
     ctx.fill();
-    
+
     // Dibujar serpiente
     ctx.shadowColor = '#39ff14';
     snake.forEach((segment, index) => {
         const x = segment.x * GRID_SIZE;
         const y = segment.y * GRID_SIZE;
-        
+
         // Efecto visual: los segmentos finales se reducen de tamaño gradualmente
         const sizeRatio = Math.max(0.65, 1 - (index / snake.length) * 0.25);
         const padding = (GRID_SIZE * (1 - sizeRatio)) / 2;
         const size = GRID_SIZE * sizeRatio;
-        
+
         ctx.fillStyle = '#39ff14';
-        
+
         // Mayor brillo en la cabeza
         ctx.shadowBlur = index === 0 ? 12 : 6;
-        
+
         // Dibujar el segmento redondeado
         drawRoundedRect(ctx, x + padding, y + padding, size, size, 4);
     });
-    
+
     // Dibujar partículas
     ctx.shadowBlur = 0;
     particles.forEach(p => {
@@ -401,10 +402,22 @@ function drawRoundedRect(context, x, y, width, height, radius) {
 muteBtn.addEventListener('click', () => {
     audio.muted = !audio.muted;
     muteIcon.textContent = audio.muted ? '🔇' : '🔊';
-    
+
     // Activar contexto si estaba suspendido y se reactiva el audio
     if (!audio.muted) {
         audio.init();
+    }
+});
+
+// Manejar Restablecimiento del Récord (High Score)
+resetScoreBtn.addEventListener('click', () => {
+    audio.init();
+    // Diálogo de confirmación para evitar borrados accidentales
+    if (confirm('¿Seguro que deseas restablecer el récord a 000?')) {
+        highScore = 0;
+        localStorage.setItem('snake_high_score', 0);
+        highScoreEl.textContent = '000';
+        audio.play('pause'); // Emitir tono retro para confirmar la acción
     }
 });
 
@@ -417,9 +430,9 @@ function loop(timestamp) {
     if (!lastTickTime) {
         lastTickTime = timestamp;
     }
-    
+
     const elapsed = timestamp - lastTickTime;
-    
+
     if (gameState === 'PLAYING') {
         if (elapsed >= gameSpeed) {
             updateGame();
@@ -430,7 +443,7 @@ function loop(timestamp) {
         // Seguir procesando y desvaneciendo partículas residuales si no está en juego activo
         updateParticles();
     }
-    
+
     draw();
     requestAnimationFrame(loop);
 }
