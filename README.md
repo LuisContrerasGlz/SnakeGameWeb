@@ -2,6 +2,8 @@
 
 Una versión moderna con estética retro y minimalista del clásico juego "Snake". La interfaz cuenta con un diseño de estilo arcade cyberpunk, sonido sintetizado en tiempo real y persistencia para guardar tu récord personal.
 
+Puedes jugar la versión web en vivo aquí: [luiscontrerasglz.github.io/SnakeGameWeb/](https://luiscontrerasglz.github.io/SnakeGameWeb/)
+
 ## Características
 
 - **Diseño Retro de Neón**: Interfaz oscura con colores neón llamativos, sombras con resplandor y un efecto sutil de líneas de escaneo CRT en pantalla.
